@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
+
     // using static since only one page exists and is needed for each page.
+    Person person;
     static Signup signup = new Signup();
     static Login login = new Login();
     static JFrame mainFrame = new JFrame("Main");

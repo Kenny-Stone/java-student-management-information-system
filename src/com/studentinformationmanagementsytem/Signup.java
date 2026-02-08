@@ -1,6 +1,8 @@
 package com.studentinformationmanagementsytem;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Signup {
     private JTextField studentOrLecturerID;
@@ -19,8 +21,127 @@ public class Signup {
     private JLabel title;
     private JPanel signupPanel;
     private JButton loginInstead;
+    private JLabel errorLabel;
 
-    public JButton getLoginInstead() {return loginInstead;}
+    public Signup() {
+        errorLabel.setVisible(false);
+        createAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked");
+                handleSignup();
+            }
+        });
+    }
 
-    public JPanel getSignupPanel() {return signupPanel;}
+    public JButton getLoginInstead() {
+        return loginInstead;
+    }
+
+    public JPanel getSignupPanel() {
+        return signupPanel;
+    }
+
+
+    // returns user data retrieved from forms
+    public String getUserID() {
+        return studentOrLecturerID.getText();
+    }
+
+    public String getFirstName() {
+        return firstName.getText();
+    }
+
+    public String getMiddleName() {
+        return middleName.getText();
+    }
+
+    public String getLastName() {
+        return lastName.getText();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.getText();
+    }
+
+    public String getEmail() {
+        return email.getText();
+    }
+
+    public String getPassword() {
+        char[] pass = password.getPassword();
+        return new String(pass);
+
+
+    }
+
+    public String getConfirmPassword() {
+        char[] confirmPass = confirmPassword.getPassword();
+        return new String(confirmPass);
+    }
+
+    public boolean isMale() {
+        return male.isSelected();
+    }
+
+    public boolean isFemale() {
+        return female.isSelected();
+    }
+
+    public boolean isStudent() {
+        return student.isSelected();
+    }
+
+    public boolean isLecturer() {
+        return lecturer.isSelected();
+    }
+
+    /// /////////////////
+
+
+    public Person handleSignup() {
+        errorLabel.setVisible(true);
+        System.out.println("Signup");
+        // checks if data is empty
+        if (_checkIfEmpty(getUserID()) || _checkIfEmpty(getFirstName())
+                || _checkIfEmpty(getMiddleName()) || _checkIfEmpty(getLastName())
+                || _checkIfEmpty(getPhoneNumber()) || _checkIfEmpty(getEmail())
+                || _checkIfEmpty(getPassword()) || _checkIfEmpty(getConfirmPassword())
+        ) {
+
+            errorLabel.setText("User must fill all fields");
+            return null;
+        }
+
+        // check if password and confirm password is not the same
+        if (!getPassword().equals(getConfirmPassword())) {
+            errorLabel.setText("Passwords do not match");
+            return null;
+        }
+
+
+        // checks if checkbox have not been selected
+
+        if(!isMale() && !isFemale()) {
+            errorLabel.setText("Please select your gender");
+            return null;
+        }
+
+        if(!isStudent() && !isLecturer()) {
+            errorLabel.setText("Please select your status");
+            return null;
+        }
+
+
+
+
+        errorLabel.setVisible(false);
+        System.out.println("Account Created successfully");
+        return null;
+    }
+
+    private boolean _checkIfEmpty(String data) {
+        return data.isEmpty();
+    }
+
 }
