@@ -1,4 +1,4 @@
-package com.studentinformationmanagementsytem;
+package com.studentinformationmanagementsystem;
 
 public class Lecturer extends Person {
     public Lecturer(String id, String firstName, String middleName,

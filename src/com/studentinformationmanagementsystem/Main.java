@@ -1,4 +1,4 @@
-package com.studentinformationmanagementsytem;
+package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,11 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
-
     // using static since only one page exists and is needed for each page.
-    Person person;
+    static Person person;
     static Signup signup = new Signup();
     static Login login = new Login();
+    static Dashboard dashboard = new Dashboard();
     static JFrame mainFrame = new JFrame("Main");
     static CardLayout layout = new CardLayout();
     static JPanel container = new JPanel(layout);
@@ -18,8 +18,9 @@ public class Main {
     static void main() {
 //        mainFrame.setContentPane(signup.getSignupFrame());
 
-        container.add(signup.getSignupPanel(), "Signup");
-        container.add(login.getLoginPanel(), "Login");
+        addPanel(signup.getSignupPanel(),"Signup");
+        addPanel(login.getLoginPanel(),"Login");
+        addPanel(dashboard.getDashboardPanel(),"Dashboard");
 //        mainFrame.setSize(400,400);
         mainFrame.add(container);
         mainFrame.setLocationRelativeTo(null);
@@ -29,6 +30,19 @@ public class Main {
         performAllPanelActions();
 
     }
+
+    static void addPanel(JPanel panel, String name) {
+        container.add(panel,name);
+    }
+
+    static void show(String name) {
+        layout.show(container,name);
+    }
+
+    static JPanel getContainer() {
+        return container;
+    }
+    static CardLayout getLayout() {return layout;};
 
     static void performSignupActions() {
         signup.getLoginInstead().addActionListener(new ActionListener() {

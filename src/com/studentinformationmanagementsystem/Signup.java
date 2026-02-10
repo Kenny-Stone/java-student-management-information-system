@@ -1,4 +1,4 @@
-package com.studentinformationmanagementsytem;
+package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -29,7 +29,10 @@ public class Signup {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Clicked");
+                try {
                 handleSignup();
+                }
+                catch (RuntimeException ex) {}
             }
         });
     }
@@ -68,6 +71,10 @@ public class Signup {
         return email.getText();
     }
 
+    public String getGender() {
+        return isMale() ? "male" : "female";
+    }
+
     public String getPassword() {
         char[] pass = password.getPassword();
         return new String(pass);
@@ -99,7 +106,7 @@ public class Signup {
     /// /////////////////
 
 
-    public Person handleSignup() {
+    public void handleSignup() throws RuntimeException {
         errorLabel.setVisible(true);
         System.out.println("Signup");
         // checks if data is empty
@@ -110,35 +117,48 @@ public class Signup {
         ) {
 
             errorLabel.setText("User must fill all fields");
-            return null;
+            return;
         }
 
         // check if password and confirm password is not the same
         if (!getPassword().equals(getConfirmPassword())) {
             errorLabel.setText("Passwords do not match");
-            return null;
+            return;
         }
 
 
         // checks if checkbox have not been selected
 
-        if(!isMale() && !isFemale()) {
+        if (!isMale() && !isFemale()) {
             errorLabel.setText("Please select your gender");
-            return null;
+            return;
         }
 
-        if(!isStudent() && !isLecturer()) {
+        if (!isStudent() && !isLecturer()) {
             errorLabel.setText("Please select your status");
-            return null;
+            return;
         }
-
-
 
 
         errorLabel.setVisible(false);
         System.out.println("Account Created successfully");
-        return null;
+        if (isStudent()) {
+            Main.person =  new Student(getUserID(),getFirstName(),getMiddleName(),
+                    getLastName(),getPhoneNumber(),getEmail(),getPassword(),
+                    getGender(),"appl");
+        }
+        else if(isLecturer()) {
+            Main.person =  new Lecturer(getUserID(),getFirstName(),getMiddleName(),
+                    getLastName(),getPhoneNumber(),getEmail(),getPassword(),getGender());
+        }
+        else {
+            throw new RuntimeException("Status is invalid...");
+        }
+
+        Main.show("Dashboard");
     }
+
+
 
     private boolean _checkIfEmpty(String data) {
         return data.isEmpty();

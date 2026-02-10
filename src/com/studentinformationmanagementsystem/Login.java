@@ -1,4 +1,4 @@
-package com.studentinformationmanagementsytem;
+package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
 
@@ -11,6 +11,8 @@ public class Login {
     private JButton loginButton;
     private JPanel loginPanel;
     private JButton signInInsteadButton;
+
+
 
     public JButton getSignInInsteadButton() {
         return signInInsteadButton;

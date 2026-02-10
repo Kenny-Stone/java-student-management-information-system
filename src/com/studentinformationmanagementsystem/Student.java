@@ -1,6 +1,4 @@
-package com.studentinformationmanagementsytem;
-
-import javax.swing.*;
+package com.studentinformationmanagementsystem;
 
 public class Student extends Person {
     String programme;

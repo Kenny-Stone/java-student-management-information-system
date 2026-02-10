@@ -1,4 +1,4 @@
-package com.studentinformationmanagementsytem;
+package com.studentinformationmanagementsystem;
 
 public abstract class Person {
     protected String id;
