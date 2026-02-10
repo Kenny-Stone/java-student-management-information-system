@@ -25,6 +25,15 @@ public class Signup {
 
     public Signup() {
         errorLabel.setVisible(false);
+
+        //action listeners
+        getLoginInstead().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Main.show("Login");
+            }
+        });
+
         createAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -32,7 +41,9 @@ public class Signup {
                 try {
                 handleSignup();
                 }
-                catch (RuntimeException ex) {}
+                catch (RuntimeException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         });
     }
@@ -145,7 +156,7 @@ public class Signup {
         if (isStudent()) {
             Main.person =  new Student(getUserID(),getFirstName(),getMiddleName(),
                     getLastName(),getPhoneNumber(),getEmail(),getPassword(),
-                    getGender(),"appl");
+                    getGender());
         }
         else if(isLecturer()) {
             Main.person =  new Lecturer(getUserID(),getFirstName(),getMiddleName(),
@@ -157,11 +168,7 @@ public class Signup {
 
         Main.show("Dashboard");
     }
-
-
-
     private boolean _checkIfEmpty(String data) {
         return data.isEmpty();
     }
-
 }

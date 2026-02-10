@@ -1,6 +1,8 @@
 package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Login {
     private JTextField textField1;
@@ -13,6 +15,14 @@ public class Login {
     private JButton signInInsteadButton;
 
 
+    public Login() {
+        getSignInInsteadButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Main.show("Signup");
+            }
+        });
+    }
 
     public JButton getSignInInsteadButton() {
         return signInInsteadButton;

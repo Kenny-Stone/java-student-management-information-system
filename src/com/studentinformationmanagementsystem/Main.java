@@ -24,10 +24,10 @@ public class Main {
 //        mainFrame.setSize(400,400);
         mainFrame.add(container);
         mainFrame.setLocationRelativeTo(null);
+        mainFrame.setLocation(100,100);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.pack();
         mainFrame.setVisible(true);
-        performAllPanelActions();
 
     }
 
@@ -44,29 +44,4 @@ public class Main {
     }
     static CardLayout getLayout() {return layout;};
 
-    static void performSignupActions() {
-        signup.getLoginInstead().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Clicked");
-                layout.show(container, "Login");
-            }
-        });
-    }
-
-    static void performLoginActions() {
-        login.getSignInInsteadButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Clicked");
-                layout.show(container, "Signup");
-            }
-        });
-    }
-
-
-    static void performAllPanelActions() {
-        performSignupActions();
-        performLoginActions();
-    }
 }
