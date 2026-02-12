@@ -2,8 +2,6 @@ package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Main {
     // using static since only one page exists and is needed for each page.
@@ -42,6 +40,6 @@ public class Main {
     static JPanel getContainer() {
         return container;
     }
-    static CardLayout getLayout() {return layout;};
+    static CardLayout getLayout() {return layout;}
 
 }

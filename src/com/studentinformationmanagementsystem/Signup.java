@@ -1,8 +1,13 @@
 package com.studentinformationmanagementsystem;
 
+import com.sun.jdi.InvalidTypeException;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Signup {
     private JTextField studentOrLecturerID;
@@ -39,9 +44,8 @@ public class Signup {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Clicked");
                 try {
-                handleSignup();
-                }
-                catch (RuntimeException ex) {
+                    handleSignup();
+                } catch (RuntimeException ex) {
                     System.out.println(ex.getMessage());
                 }
             }
@@ -131,6 +135,13 @@ public class Signup {
             return;
         }
 
+        try {
+            _checkIfPhoneNumberValid();
+        } catch (InvalidTypeException ex) {
+            errorLabel.setText(ex.getMessage());
+            return;
+        }
+
         // check if password and confirm password is not the same
         if (!getPassword().equals(getConfirmPassword())) {
             errorLabel.setText("Passwords do not match");
@@ -154,21 +165,33 @@ public class Signup {
         errorLabel.setVisible(false);
         System.out.println("Account Created successfully");
         if (isStudent()) {
-            Main.person =  new Student(getUserID(),getFirstName(),getMiddleName(),
-                    getLastName(),getPhoneNumber(),getEmail(),getPassword(),
+            Main.person = new Student(getUserID(), getFirstName(), getMiddleName(),
+                    getLastName(), getPhoneNumber(), getEmail(), getPassword(),
                     getGender());
-        }
-        else if(isLecturer()) {
-            Main.person =  new Lecturer(getUserID(),getFirstName(),getMiddleName(),
-                    getLastName(),getPhoneNumber(),getEmail(),getPassword(),getGender());
-        }
-        else {
+        } else if (isLecturer()) {
+            Main.person = new Lecturer(getUserID(), getFirstName(), getMiddleName(),
+                    getLastName(), getPhoneNumber(), getEmail(), getPassword(), getGender());
+        } else {
             throw new RuntimeException("Status is invalid...");
         }
 
         Main.show("Dashboard");
     }
+
+
+    // handler methods
     private boolean _checkIfEmpty(String data) {
         return data.isEmpty();
+    }
+
+    private void _checkIfPhoneNumberValid() throws InvalidTypeException {
+        // check if mobile number is valid
+        String telNumber = phoneNumber.getText();
+        for (int i = 0; i < telNumber.length(); i++) {
+            char digit = telNumber.charAt(i);
+            if (Character.isLetter(digit)) {
+                throw new InvalidTypeException("Phone Number field takes in only digits");
+            }
+        }
     }
 }
