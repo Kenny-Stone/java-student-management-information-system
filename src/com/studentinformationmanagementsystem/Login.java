@@ -13,6 +13,7 @@ public class Login {
     private JButton loginButton;
     private JPanel loginPanel;
     private JButton signInInsteadButton;
+    private JLabel schoolLogo;
 
 
     public Login() {

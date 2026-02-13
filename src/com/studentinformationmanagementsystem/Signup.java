@@ -27,6 +27,7 @@ public class Signup {
     private JPanel signupPanel;
     private JButton loginInstead;
     private JLabel errorLabel;
+    private JLabel schoolLogo;
 
     public Signup() {
         errorLabel.setVisible(false);

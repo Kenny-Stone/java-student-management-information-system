@@ -21,10 +21,10 @@ public class Main {
         addPanel(dashboard.getDashboardPanel(),"Dashboard");
 //        mainFrame.setSize(400,400);
         mainFrame.add(container);
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setLocation(100,100);
+//        mainFrame.setLocation(100,100);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.pack();
+        mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
 
     }
