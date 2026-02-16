@@ -5,9 +5,7 @@ import com.sun.jdi.InvalidTypeException;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class Signup {
     private JTextField studentOrLecturerID;
@@ -169,9 +167,26 @@ public class Signup {
             Main.person = new Student(getUserID(), getFirstName(), getMiddleName(),
                     getLastName(), getPhoneNumber(), getEmail(), getPassword(),
                     getGender());
-        } else if (isLecturer()) {
+
+
+            // store student details
+            try {
+                if (Main.person.store() < 1) {
+                    errorLabel.setText("Something went wrong. Details could not be saved.");
+                    return;
+                }
+            } catch (RuntimeException ex) {
+                errorLabel.setText(ex.getMessage());
+            }
+
+
+        }
+        // if user is a lecturer
+        else if (isLecturer()) {
             Main.person = new Lecturer(getUserID(), getFirstName(), getMiddleName(),
                     getLastName(), getPhoneNumber(), getEmail(), getPassword(), getGender());
+
+            // store lecturer details
         } else {
             throw new RuntimeException("Status is invalid...");
         }
@@ -198,4 +213,9 @@ public class Signup {
             }
         }
     }
+
+    public void setErrorLabelValue(String value) {
+        errorLabel.setText(value);
+    }
+
 }

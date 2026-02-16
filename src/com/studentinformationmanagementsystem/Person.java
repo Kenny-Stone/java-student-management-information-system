@@ -21,4 +21,8 @@ public abstract class Person {
         this.password = password;
         this.gender = gender;
     }
+    public int store() {
+        return 0;
+    }
+    public void update() {}
 }

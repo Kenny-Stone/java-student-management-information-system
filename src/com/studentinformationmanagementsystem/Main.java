@@ -18,8 +18,6 @@ public class Main {
 
         addPanel(signup.getSignupPanel(),"Signup");
         addPanel(login.getLoginPanel(),"Login");
-//        addPanel(dashboard.getDashboardPanel(),"Dashboard");
-//        mainFrame.setSize(400,400);
         mainFrame.add(container);
 //        mainFrame.setLocation(100,100);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

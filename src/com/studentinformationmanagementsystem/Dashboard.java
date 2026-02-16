@@ -42,6 +42,14 @@ public class Dashboard {
                 saveButton.setEnabled(true);
             }
         });
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DBConnection conn = new DBConnection();
+
+            }
+        });
     }
 
 

@@ -1,5 +1,8 @@
 package com.studentinformationmanagementsystem;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+
 public class Student extends Person {
     String programme;
 
@@ -9,4 +12,19 @@ public class Student extends Person {
                    String password, String gender) {
         super(id, firstName, middleName, lastName, phoneNumber, email, password, gender);
     }
+
+    @Override
+    public int store() {
+        try {
+
+            DBConnection connection = new DBConnection();
+            return connection.executeUpdate(
+                    "INSERT INTO students(student_id,first_name,middle_name,last_name,phone_number,email,pass_word,gender) VALUES(?,?,?,?,?,?,?,?);",id,firstName,middleName,lastName,phoneNumber,email,password,gender);
+
+        }
+        catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 }
