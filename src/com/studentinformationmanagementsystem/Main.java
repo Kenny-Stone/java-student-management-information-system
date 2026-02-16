@@ -8,7 +8,7 @@ public class Main {
     static Person person;
     static Signup signup = new Signup();
     static Login login = new Login();
-    static Dashboard dashboard = new Dashboard();
+    static Dashboard dashboard;
     static JFrame mainFrame = new JFrame("Main");
     static CardLayout layout = new CardLayout();
     static JPanel container = new JPanel(layout);
@@ -18,7 +18,7 @@ public class Main {
 
         addPanel(signup.getSignupPanel(),"Signup");
         addPanel(login.getLoginPanel(),"Login");
-        addPanel(dashboard.getDashboardPanel(),"Dashboard");
+//        addPanel(dashboard.getDashboardPanel(),"Dashboard");
 //        mainFrame.setSize(400,400);
         mainFrame.add(container);
 //        mainFrame.setLocation(100,100);
