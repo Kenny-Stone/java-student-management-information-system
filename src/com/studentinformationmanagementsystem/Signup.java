@@ -122,14 +122,9 @@ public class Signup {
 
     public void handleSignup() throws RuntimeException {
         errorLabel.setVisible(true);
-        System.out.println("Signup");
         // checks if data is empty
-        if (_checkIfEmpty(getUserID()) || _checkIfEmpty(getFirstName())
-                || _checkIfEmpty(getMiddleName()) || _checkIfEmpty(getLastName())
-                || _checkIfEmpty(getPhoneNumber()) || _checkIfEmpty(getEmail())
-                || _checkIfEmpty(getPassword()) || _checkIfEmpty(getConfirmPassword())
-        ) {
-
+        if (_checkIfAllFieldEmpty())
+         {
             errorLabel.setText("User must fill all fields");
             return;
         }
@@ -212,6 +207,13 @@ public class Signup {
                 throw new InvalidTypeException("Phone Number field takes in only digits");
             }
         }
+    }
+
+    private boolean _checkIfAllFieldEmpty() {
+        return _checkIfEmpty(getUserID()) || _checkIfEmpty(getFirstName())
+                || _checkIfEmpty(getMiddleName()) || _checkIfEmpty(getLastName())
+                || _checkIfEmpty(getPhoneNumber()) || _checkIfEmpty(getEmail())
+                || _checkIfEmpty(getPassword()) || _checkIfEmpty(getConfirmPassword());
     }
 
     public void setErrorLabelValue(String value) {

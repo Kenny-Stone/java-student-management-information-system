@@ -46,8 +46,6 @@ public class Dashboard {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DBConnection conn = new DBConnection();
-
             }
         });
     }
@@ -83,4 +81,5 @@ public class Dashboard {
         this.phoneNumber.setEnabled(false);
 
     }
+
 }

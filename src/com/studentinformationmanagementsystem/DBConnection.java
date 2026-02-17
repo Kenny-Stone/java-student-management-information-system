@@ -19,7 +19,6 @@ public class DBConnection {
     public ResultSet executeQuery(String statement) throws SQLException {
         try {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(statement);
             return st.executeQuery(statement);
         } catch (SQLException throwables) {
             throw new SQLException(throwables);

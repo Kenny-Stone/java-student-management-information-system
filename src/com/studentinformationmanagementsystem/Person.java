@@ -1,5 +1,7 @@
 package com.studentinformationmanagementsystem;
 
+import com.mysql.cj.protocol.Resultset;
+
 public abstract class Person {
     protected String id;
     protected String firstName;
@@ -11,7 +13,7 @@ public abstract class Person {
     protected String gender;
 
     public Person(String id, String firstName, String middleName, String lastName,
-                  String phoneNumber,String email, String password, String gender) {
+                  String phoneNumber, String email, String password, String gender) {
         this.id = id;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -21,8 +23,15 @@ public abstract class Person {
         this.password = password;
         this.gender = gender;
     }
+
+    public Resultset getData() {
+        return null;
+    }
+
     public int store() {
         return 0;
     }
-    public void update() {}
+
+    public void update() {
+    }
 }

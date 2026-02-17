@@ -1,5 +1,7 @@
 package com.studentinformationmanagementsystem;
 
+import com.mysql.cj.protocol.Resultset;
+
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -19,7 +21,10 @@ public class Student extends Person {
 
             DBConnection connection = new DBConnection();
             return connection.executeUpdate(
-                    "INSERT INTO students(student_id,first_name,middle_name,last_name,phone_number,email,pass_word,gender) VALUES(?,?,?,?,?,?,?,?);",id,firstName,middleName,lastName,phoneNumber,email,password,gender);
+                    "INSERT INTO students(student_id,first_name,middle_name,last_name," +
+                            "phone_number,email,pass_word,gender)" +
+                             " VALUES(?,?,?,?,?,?,?,?);",
+                    id,firstName,middleName,lastName,phoneNumber,email,password,gender);
 
         }
         catch (SQLException ex) {
@@ -27,4 +32,19 @@ public class Student extends Person {
         }
     }
 
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public Resultset getData() {
+        try {
+            DBConnection connection = new DBConnection();
+            return (Resultset) connection.executeQuery("SELECT student_id, first_name,middle_name,last_name,phone_number," +
+                    "email,pass_word,gender from students");
+        } catch (RuntimeException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
