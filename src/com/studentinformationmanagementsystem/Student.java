@@ -2,6 +2,7 @@ package com.studentinformationmanagementsystem;
 
 import com.mysql.cj.protocol.Resultset;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -20,41 +21,48 @@ public class Student extends Person {
         try {
 
             DBConnection connection = new DBConnection();
-            return connection.executeUpdate(
+            int count =  connection.executeUpdate(
                     "INSERT INTO students(student_id,first_name,middle_name,last_name," +
                             "phone_number,email,pass_word,gender)" +
                             " VALUES(?,?,?,?,?,?,?,?);",
                     id, firstName, middleName, lastName, phoneNumber, email, password, gender);
 
+            connection.close();
+            return count;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public int update(String id) {
+    public int update(String userId, String firstName, String middleName, String lastName, String phoneNumber) {
         try {
 
             DBConnection connection = new DBConnection();
-            return connection.executeUpdate(
+
+            int count = connection.executeUpdate(
                     "UPDATE students " +
-                            "SET student_id = ? " +
-                            "first_name = ? " +
-                            "middle_name = ? " +
-                            "last_name = ? " +
-                            "phone_number = ? where student = ?"
+                            "SET first_name = ?, " +
+                            "middle_name = ?, " +
+                            "last_name = ?, " +
+                            "phone_number = ? " +
+                            "WHERE student_id = " + "\"" + userId + "\"", firstName, middleName, lastName, phoneNumber
             );
+            connection.close();
+            return count;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public Resultset getData() {
+    public ResultSet getData() {
         try {
             DBConnection connection = new DBConnection();
-            return (Resultset) connection.executeQuery("SELECT student_id, first_name,middle_name,last_name,phone_number," +
+            ResultSet rs =  connection.executeQuery("SELECT student_id, first_name,middle_name,last_name,phone_number," +
                     "email,pass_word,gender from students");
+            connection.close();
+            return rs;
         } catch (RuntimeException | SQLException e) {
             throw new RuntimeException(e);
         }

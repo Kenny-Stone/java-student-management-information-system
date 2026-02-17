@@ -173,8 +173,6 @@ public class Signup {
             } catch (RuntimeException ex) {
                 errorLabel.setText(ex.getMessage());
             }
-
-
         }
         // if user is a lecturer
         else if (isLecturer()) {

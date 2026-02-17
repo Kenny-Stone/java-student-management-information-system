@@ -46,6 +46,7 @@ public class Dashboard {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateData();
             }
         });
     }
@@ -73,6 +74,7 @@ public class Dashboard {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateData();
             }
         });
     }
@@ -147,6 +149,17 @@ public class Dashboard {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
 
+    public void updateData() {
+        try {
+            if(Main.person.update(studentID.getText(), firstName.getText(), middleName.getText(), lastName.getText(), phoneNumber.getText()) < 1) {
+                System.out.println("Couldn't update data!");
+            }
+        } catch (Exception ex) {
+            //TODO: create an error label field to display error message
+            // instead of printing error message
+            System.out.println(ex.getMessage());
+        }
     }
 }

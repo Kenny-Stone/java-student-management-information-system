@@ -16,6 +16,7 @@ public class DBConnection {
             throw new RuntimeException(e);
         }
     }
+
     public ResultSet executeQuery(String statement) throws SQLException {
         try {
             Statement st = con.createStatement();
@@ -24,20 +25,22 @@ public class DBConnection {
             throw new SQLException(throwables);
         }
     }
-    public int executeUpdate(String statement, String...values) throws SQLException {
+
+    public int executeUpdate(String statement, String... values) throws SQLException {
         try {
             PreparedStatement ps = con.prepareStatement(statement);
-            for (int i = 0; i < values.length; i++) {
-                ps.setString(i + 1, values[i]);
+            if (values != null) {
+                for (int i = 0; i < values.length; i++) {
+                    ps.setString(i + 1, values[i]);
+                }
             }
             return ps.executeUpdate();
-        }
-        catch (SQLException throwables) {
+        } catch (SQLException throwables) {
             throw new SQLException(throwables);
         }
     }
 
-    public ResultSet executeQuery(String statement, String...values) throws SQLException {
+    public ResultSet executeQuery(String statement, String... values) throws SQLException {
         try {
             PreparedStatement ps = con.prepareStatement(statement);
             for (int i = 0; i < values.length; i++) {
@@ -45,8 +48,7 @@ public class DBConnection {
             }
             return ps.executeQuery();
 
-        }
-        catch(SQLException throwables) {
+        } catch (SQLException throwables) {
             throw new SQLException(throwables);
         }
     }

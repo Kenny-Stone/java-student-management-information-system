@@ -2,6 +2,8 @@ package com.studentinformationmanagementsystem;
 
 import com.mysql.cj.protocol.Resultset;
 
+import java.sql.ResultSet;
+
 public abstract class Person {
     protected String id;
     protected String firstName;
@@ -24,7 +26,7 @@ public abstract class Person {
         this.gender = gender;
     }
 
-    public Resultset getData() {
+    public ResultSet getData() {
         return null;
     }
 
@@ -32,6 +34,7 @@ public abstract class Person {
         return 0;
     }
 
-    public int update() {
+    public int update(String id,String firstName,String middleName,String lastName,String phoneNumber) {
+        return 0;
     }
 }
