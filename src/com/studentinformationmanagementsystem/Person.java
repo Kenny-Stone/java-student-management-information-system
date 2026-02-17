@@ -32,6 +32,6 @@ public abstract class Person {
         return 0;
     }
 
-    public void update() {
+    public int update() {
     }
 }

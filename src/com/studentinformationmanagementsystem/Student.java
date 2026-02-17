@@ -23,18 +23,30 @@ public class Student extends Person {
             return connection.executeUpdate(
                     "INSERT INTO students(student_id,first_name,middle_name,last_name," +
                             "phone_number,email,pass_word,gender)" +
-                             " VALUES(?,?,?,?,?,?,?,?);",
-                    id,firstName,middleName,lastName,phoneNumber,email,password,gender);
+                            " VALUES(?,?,?,?,?,?,?,?);",
+                    id, firstName, middleName, lastName, phoneNumber, email, password, gender);
 
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void update() {
+    public int update(String id) {
+        try {
 
+            DBConnection connection = new DBConnection();
+            return connection.executeUpdate(
+                    "UPDATE students " +
+                            "SET student_id = ? " +
+                            "first_name = ? " +
+                            "middle_name = ? " +
+                            "last_name = ? " +
+                            "phone_number = ? where student = ?"
+            );
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override

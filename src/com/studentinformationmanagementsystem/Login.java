@@ -68,6 +68,7 @@ public class Login {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        Main.dashboard = new Dashboard(getUserID(),getPassword());
         Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
         Main.show("Dashboard");
 

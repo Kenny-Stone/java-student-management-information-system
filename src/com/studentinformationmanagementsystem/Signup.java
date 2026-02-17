@@ -186,8 +186,7 @@ public class Signup {
             throw new RuntimeException("Status is invalid...");
         }
 
-        Main.dashboard = new Dashboard(getUserID(), getFirstName(),
-                getMiddleName(), getLastName(), getPhoneNumber());
+        Main.dashboard = new Dashboard(getUserID(), getPassword());
         Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
         Main.show("Dashboard");
     }
