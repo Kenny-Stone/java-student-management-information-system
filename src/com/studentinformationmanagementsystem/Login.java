@@ -42,7 +42,7 @@ public class Login {
     public void handleLogin() throws RuntimeException {
         errorLabel.setVisible(true);
         // check if any of the fields are empty
-        if (_checkIfEmpty(getUserID()) || _checkIfEmpty(getPassword())) {
+        if (_checkIfEmpty(_getUserID()) || _checkIfEmpty(_getPassword())) {
             errorLabel.setText("Please fill out all fields");
             return;
         }
@@ -54,21 +54,34 @@ public class Login {
         }
 
         try {
-            DBConnection conn = new DBConnection();
-
-            ResultSet result = conn.executeQuery("SELECT * from students where student_id = ? and pass_word = ?", getUserID(), getPassword());
-            int count = 0;
-            while (result.next()) {
-                count++;
+            // if user doesn't exist
+            ResultSet result = _validateIfUserExists();
+            if (result != null) {
+                if (result.next()) {
+                    if (isStudent()) {
+                        Main.person = new Student(
+                                result.getString("student_id"),
+                                result.getString("first_name"),
+                                result.getString("middle_name"),
+                                result.getString("last_name"),
+                                result.getString("phone_number"),
+                                result.getString("email"),
+                                result.getString("pass_word"),
+                                result.getString("gender"));
+                    }
+                }
             }
-            if(count < 1) {
-                errorLabel.setText("User does not exist in the database");
-            }
+//            ResultSet rs = _validateIfUserExists();
+//            if (!_validateIfUserExists()) {
+//                errorLabel.setText("User doesn't exist!");
+//                return;
+//            }
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-        Main.dashboard = new Dashboard(getUserID(),getPassword());
+
+        Main.dashboard = new Dashboard();
         Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
         Main.show("Dashboard");
 
@@ -86,11 +99,11 @@ public class Login {
         return data.isEmpty();
     }
 
-    private String getUserID() {
+    private String _getUserID() {
         return studentOrLecturerID.getText();
     }
 
-    public String getPassword() {
+    public String _getPassword() {
         char[] pass = password.getPassword();
         return new String(pass);
     }
@@ -103,4 +116,22 @@ public class Login {
         return lecturer.isSelected();
     }
 
+    private ResultSet _validateIfUserExists() throws SQLException {
+        try {
+            DBConnection conn = new DBConnection();
+            ResultSet result = conn.executeQuery("SELECT * from students where student_id = ? and pass_word = ?", _getUserID(), _getPassword());
+            return result;
+        } catch (SQLException ex) {
+            errorLabel.setText("User doesn't exist!");
+        }
+        return null;
+    }
+
+    private int _getNumberOfResults(ResultSet rs) throws SQLException {
+        int count = 0;
+        while (rs.next()) {
+            count++;
+        }
+        return count;
+    }
 }

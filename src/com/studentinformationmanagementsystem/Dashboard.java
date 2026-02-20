@@ -21,16 +21,13 @@ public class Dashboard {
 //    private JLabel studentNameLabel;
 //    private JLabel studentPicture;
 
-    public Dashboard(String id, String password) {
-        this.studentID.setText(id);
-        this.password = password;
+    public Dashboard() {
         this.studentID.setEnabled(false);
         this.firstName.setEnabled(false);
         this.middleName.setEnabled(false);
         this.lastName.setEnabled(false);
         this.phoneNumber.setEnabled(false);
         this.saveButton.setEnabled(false);
-
         getDataFromDatabase();
 
 
@@ -78,16 +75,6 @@ public class Dashboard {
             }
         });
     }
-
-
-//    public void setPicture(String picture) {
-//        this.studentPicture.setText(picture);
-//    }
-//
-//    public void setID(String id) {
-//        studentIDLabel.setText(id);
-//    }
-
     public JPanel getDashboardPanel() {
         return dashboardPanel;
     }
@@ -134,13 +121,16 @@ public class Dashboard {
 
     public void getDataFromDatabase() {
         try {
+            String tempID = Main.person.getId();
+            String tempPassword = Main.person.getPassword();
 
             DBConnection conn = new DBConnection();
             ResultSet result = conn.executeQuery("SELECT student_id,first_name," +
                             "middle_name,last_name,phone_number from students where student_id = ? and pass_word = ?",
-                    studentID.getText(), password);
+                    tempID, tempPassword);
 
             if (result.next()) {
+                setID(result.getString("student_id"));
                 setFirstName(result.getString("first_name"));
                 setMiddleName(result.getString("middle_name"));
                 setLastName(result.getString("last_name"));

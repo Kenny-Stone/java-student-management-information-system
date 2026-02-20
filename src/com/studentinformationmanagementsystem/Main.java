@@ -31,6 +31,10 @@ public class Main {
         container.add(panel,name);
     }
 
+    static void removePanel(JPanel panel) {
+        container.remove(panel);
+    }
+
     static void show(String name) {
         layout.show(container,name);
     }

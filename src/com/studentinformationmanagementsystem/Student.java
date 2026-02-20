@@ -37,9 +37,7 @@ public class Student extends Person {
     @Override
     public int update(String userId, String firstName, String middleName, String lastName, String phoneNumber) {
         try {
-
             DBConnection connection = new DBConnection();
-
             int count = connection.executeUpdate(
                     "UPDATE students " +
                             "SET first_name = ?, " +
@@ -49,6 +47,10 @@ public class Student extends Person {
                             "WHERE student_id = " + "\"" + userId + "\"", firstName, middleName, lastName, phoneNumber
             );
             connection.close();
+            this.setFirstName(firstName);
+            this.setMiddleName(middleName);
+            this.setLastName(lastName);
+            this.setPhoneNumber(phoneNumber);
             return count;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

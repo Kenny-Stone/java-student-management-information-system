@@ -1,7 +1,5 @@
 package com.studentinformationmanagementsystem;
 
-import com.mysql.cj.protocol.Resultset;
-
 import java.sql.ResultSet;
 
 public abstract class Person {
@@ -26,6 +24,60 @@ public abstract class Person {
         this.gender = gender;
     }
 
+    // SETTER METHODS
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    // GETTER METHODS
+    public String getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
     public ResultSet getData() {
         return null;
     }
@@ -34,7 +86,7 @@ public abstract class Person {
         return 0;
     }
 
-    public int update(String id,String firstName,String middleName,String lastName,String phoneNumber) {
+    public int update(String id, String firstName, String middleName, String lastName, String phoneNumber) {
         return 0;
     }
 }
