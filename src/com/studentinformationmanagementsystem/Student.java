@@ -1,6 +1,6 @@
 package com.studentinformationmanagementsystem;
 
-import com.mysql.cj.protocol.Resultset;
+//import com.mysql.cj.protocol.Resultset;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
