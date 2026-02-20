@@ -1,6 +1,7 @@
 package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ public class Dashboard {
     private JButton editDetailsButton;
     private JButton saveButton;
     private JTextField studentID;
+    private JLabel errorLabel;
 
     private String password;
 //    private JLabel studentIDLabel;
@@ -144,12 +146,17 @@ public class Dashboard {
     public void updateData() {
         try {
             if(Main.person.update(studentID.getText(), firstName.getText(), middleName.getText(), lastName.getText(), phoneNumber.getText()) < 1) {
-                System.out.println("Couldn't update data!");
+             errorLabel.setText("Couldn't update data");
+            }
+            else {
+                errorLabel.setForeground(Color.GREEN);
+                errorLabel.setText("Data was updated successfully!");
+//                errorLabel.setForeground(Color.RED);
             }
         } catch (Exception ex) {
             //TODO: create an error label field to display error message
             // instead of printing error message
-            System.out.println(ex.getMessage());
+            errorLabel.setText("Error occurred while storing data. Please try again");
         }
     }
 }
