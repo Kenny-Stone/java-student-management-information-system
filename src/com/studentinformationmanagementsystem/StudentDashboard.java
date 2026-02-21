@@ -2,6 +2,10 @@ package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 public class StudentDashboard extends NDashboard {
     private JPanel studentDashboardPanel;
@@ -12,19 +16,105 @@ public class StudentDashboard extends NDashboard {
     private JLabel welcomeMessage;
     private JPanel coursesPanel;
     private JPanel schoolInfoPanel;
+    private JPanel contentPanel;
+
+    // get school data and store in variable
+    private int noOfStudents;
+    private int noOfLecturers;
+    private int noOfMales;
+    private int noOfFemales;
 
     public StudentDashboard() {
         _setLogo();
-        _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getLastName());
+        _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
         _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getLastName());
+        _getDataFromDatabase();
+        // NOTE: always get data before display school info data
+        _setSchoolInfoData();
     }
 
     public JPanel getDashboardPanel() {
         return studentDashboardPanel;
     }
 
+    private JPanel _createCard(String title, String value) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        card.setBackground(Color.WHITE);
+
+        JLabel header = new JLabel(title,SwingConstants.CENTER);
+        header.setFont(new Font("Arial",Font.BOLD,25));
+        header.setForeground(Color.DARK_GRAY);
+
+        JLabel number = new JLabel(value,SwingConstants.CENTER);
+        number.setFont(new Font("Arial",Font.BOLD,48));
+        number.setForeground(new Color(33,150,243));
+
+        card.add(header,BorderLayout.NORTH);
+        card.add(number,BorderLayout.CENTER);
+
+        return card;
+
+    }
+
+    private void _setSchoolInfoData() {
+//        schoolInfoPanel.setLayout(new GridLayout(1, 2))
+        contentPanel.setLayout(new GridLayout(1,3,15,15));
+        contentPanel.add(_createCard("Students",Integer.toString(noOfStudents)));
+        contentPanel.add(_createCard("Males",Integer.toString(noOfMales)));
+        contentPanel.add(_createCard("Females",Integer.toString(noOfFemales)));
+        contentPanel.revalidate();
+        contentPanel.repaint();
+//        // create card to display student data
+//        JPanel studentCard = new JPanel(new BorderLayout());
+//        studentCard.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+//        studentCard.setBackground(Color.WHITE);
+//
+//        JLabel header = new JLabel("Student",SwingConstants.CENTER);
+//        header.setFont(new Font("Arial",Font.PLAIN,16));
+//        header.setForeground(Color.DARK_GRAY);
+//
+//        JLabel number = new JLabel("245",SwingConstants.CENTER);
+//        number.setFont(new Font("Arial",Font.PLAIN,16));
+//        number.setForeground(new Color(33,159,243));
+//
+//        studentCard.add(header,BorderLayout.NORTH);
+//        studentCard.add(number,BorderLayout.CENTER);
+//        schoolInfoPanel.add(studentCard);
+    }
+
+
 
     // helper methods
+    private void _getDataFromDatabase() {
+        try {
+            DBConnection connection = new DBConnection();
+            noOfStudents = _getNoOfStudentsFromDatabase(connection);
+            noOfMales = _getNoOfMalesFromDatabase(connection);
+            noOfFemales = _getNoOfFemalesFromDatabase(connection);
+            connection.close();
+        }
+        catch (SQLException ex) {
+            System.out.println("METHOD: _getDataFromDatabase " + ex.getMessage());
+        }
+    }
+
+    private int _getNoOfStudentsFromDatabase(DBConnection connection) throws SQLException {
+        ResultSet result = connection.executeQuery("SELECT COUNT(*) from students");
+        return result.next() ? result.getInt(1) : 0;
+//        result
+    }
+
+    private int _getNoOfMalesFromDatabase(DBConnection connection) throws SQLException {
+        ResultSet result = connection.executeQuery("SELECT COUNT(*) from students where gender = 'male'");
+        return result.next() ? result.getInt(1) : 0;
+    }
+    private int _getNoOfFemalesFromDatabase(DBConnection connection) throws SQLException {
+        ResultSet result = connection.executeQuery("SELECT COUNT(*) from students where gender = 'female'");
+        return result.next() ? result.getInt(1) : 0;
+    }
+
+
     private void _setWelcomeText(String text) {
         welcomeMessage.setText(text);
     }
@@ -36,7 +126,7 @@ public class StudentDashboard extends NDashboard {
     private void _setLogo() {
 //        logo.setIcon(new ImageIcon(Objects.requireNonNull(StudentDashboard.class.getResource("resources/images/logo.png"))));
 
-        ImageIcon originalIcon = new ImageIcon(StudentDashboard.class.getResource("/resources/logo1.png"));
+        ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(StudentDashboard.class.getResource("/resources/logo1.png")));
         Image scaledImage = originalIcon.getImage().getScaledInstance(50,50,Image.SCALE_SMOOTH);
         schoolLogo.setIcon(new ImageIcon(scaledImage));
 //        logo.setIcon();
@@ -44,5 +134,9 @@ public class StudentDashboard extends NDashboard {
 
     //    private void addCourseToList(Course course)
     private void actionListeners() {
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
