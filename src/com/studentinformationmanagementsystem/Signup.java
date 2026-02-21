@@ -161,7 +161,7 @@ public class Signup {
             Main.person = new Student(getUserID(), getFirstName(), getMiddleName(),
                     getLastName(), getPhoneNumber(), getEmail(), getPassword(),
                     getGender());
-            Main.dashboard = new StudentDashboard();
+            Main.nDashboard = new StudentDashboard();
         }
         // if user is a lecturer
         else if (isLecturer()) {
@@ -182,7 +182,7 @@ public class Signup {
             errorLabel.setText(ex.getMessage());
         }
 
-        Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
+        Main.addPanel(Main.nDashboard.getDashboardPanel(), "Dashboard");
         Main.show("Dashboard");
     }
 

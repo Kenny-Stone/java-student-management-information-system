@@ -69,23 +69,17 @@ public class Login {
                                 result.getString("pass_word"),
                                 result.getString("gender"));
 
-                        Main.dashboard = new StudentDashboard();
-                        Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
+
                     }
                 }
             }
-//            ResultSet rs = _validateIfUserExists();
-//            if (!_validateIfUserExists()) {
-//                errorLabel.setText("User doesn't exist!");
-//                return;
-//            }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("Error occured: " + ex.getMessage());
         }
-
-
-        Main.show("Dashboard");
+        Main.nDashboard = new StudentDashboard();
+        Main.addPanel(Main.nDashboard.getDashboardPanel(), "Student Dashboard");
+        Main.show("Student Dashboard");
 
     }
 
