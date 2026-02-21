@@ -123,8 +123,7 @@ public class Signup {
     public void handleSignup() throws RuntimeException {
         errorLabel.setVisible(true);
         // checks if data is empty
-        if (_checkIfAllFieldEmpty())
-         {
+        if (_checkIfAllFieldEmpty()) {
             errorLabel.setText("User must fill all fields");
             return;
         }
@@ -162,17 +161,7 @@ public class Signup {
             Main.person = new Student(getUserID(), getFirstName(), getMiddleName(),
                     getLastName(), getPhoneNumber(), getEmail(), getPassword(),
                     getGender());
-
-
-            // store student details
-            try {
-                if (Main.person.store() < 1) {
-                    errorLabel.setText("Something went wrong. Details could not be saved.");
-                    return;
-                }
-            } catch (RuntimeException ex) {
-                errorLabel.setText(ex.getMessage());
-            }
+            Main.dashboard = new StudentDashboard();
         }
         // if user is a lecturer
         else if (isLecturer()) {
@@ -183,7 +172,16 @@ public class Signup {
         } else {
             throw new RuntimeException("Status is invalid...");
         }
-        Main.dashboard = new Dashboard();
+
+        try {
+            if (Main.person.store() < 1) {
+                errorLabel.setText("Something went wrong. Details could not be saved.");
+                return;
+            }
+        } catch (RuntimeException ex) {
+            errorLabel.setText(ex.getMessage());
+        }
+
         Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
         Main.show("Dashboard");
     }

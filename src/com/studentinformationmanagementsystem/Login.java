@@ -68,6 +68,9 @@ public class Login {
                                 result.getString("email"),
                                 result.getString("pass_word"),
                                 result.getString("gender"));
+
+                        Main.dashboard = new StudentDashboard();
+                        Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
                     }
                 }
             }
@@ -81,8 +84,7 @@ public class Login {
             System.out.println(ex.getMessage());
         }
 
-        Main.dashboard = new Dashboard();
-        Main.addPanel(Main.dashboard.getDashboardPanel(), "Dashboard");
+
         Main.show("Dashboard");
 
     }

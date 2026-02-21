@@ -8,7 +8,7 @@ public class Main {
     static Person person;
     static Signup signup = new Signup();
     static Login login = new Login();
-    static Dashboard dashboard;
+    static NDashboard dashboard;
     static JFrame mainFrame = new JFrame("Main");
     static CardLayout layout = new CardLayout();
     static JPanel container = new JPanel(layout);
