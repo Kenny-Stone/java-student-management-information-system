@@ -75,7 +75,7 @@ public class Login {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error occured: " + ex.getMessage());
+            System.out.println("Error occurred: " + ex.getMessage());
         }
         Main.nDashboard = new StudentDashboard();
         Main.addPanel(Main.nDashboard.getDashboardPanel(), "Student Dashboard");

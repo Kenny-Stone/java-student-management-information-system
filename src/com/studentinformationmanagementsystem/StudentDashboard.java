@@ -11,6 +11,7 @@ public class StudentDashboard extends NDashboard {
     private JPanel main;
     private JLabel welcomeMessage;
     private JPanel coursesPanel;
+    private JPanel schoolInfoPanel;
 
     public StudentDashboard() {
         _setLogo();
