@@ -26,10 +26,9 @@ public class StudentDashboard extends NDashboard {
 
     public StudentDashboard() {
         _setLogo();
-        _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
+        _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getLastName());
         _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getLastName());
         _getDataFromDatabase();
-        // NOTE: always get data before display school info data
         _setSchoolInfoData();
     }
 
@@ -43,7 +42,7 @@ public class StudentDashboard extends NDashboard {
         card.setBackground(Color.WHITE);
 
         JLabel header = new JLabel(title,SwingConstants.CENTER);
-        header.setFont(new Font("Arial",Font.BOLD,25));
+        header.setFont(new Font("Arial",Font.PLAIN,16));
         header.setForeground(Color.DARK_GRAY);
 
         JLabel number = new JLabel(value,SwingConstants.CENTER);
@@ -62,7 +61,7 @@ public class StudentDashboard extends NDashboard {
         contentPanel.setLayout(new GridLayout(1,3,15,15));
         contentPanel.add(_createCard("Students",Integer.toString(noOfStudents)));
         contentPanel.add(_createCard("Males",Integer.toString(noOfMales)));
-        contentPanel.add(_createCard("Females",Integer.toString(noOfFemales)));
+
         contentPanel.revalidate();
         contentPanel.repaint();
 //        // create card to display student data
