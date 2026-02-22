@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 
 public class StudentDashboard extends NDashboard {
     private JPanel studentDashboardPanel;
@@ -38,6 +37,7 @@ public class StudentDashboard extends NDashboard {
         _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
         _getDataFromDatabase();
         _setSchoolInfoData();
+
     }
 
     public JPanel getDashboardPanel() {
@@ -82,6 +82,7 @@ public class StudentDashboard extends NDashboard {
             noOfStudents = _getNoOfStudentsFromDatabase(connection);
             noOfMales = _getNoOfMalesFromDatabase(connection);
             noOfFemales = _getNoOfFemalesFromDatabase(connection);
+            _getAvailableCoursesFromDatabase(connection);   // stores data in availableCourse list
             connection.close();
         } catch (SQLException ex) {
             System.out.println("METHOD: _getDataFromDatabase " + ex.getMessage());
@@ -114,13 +115,36 @@ public class StudentDashboard extends NDashboard {
     }
 
     private void _setLogo() {
-        ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(StudentDashboard.class.getResource("/resources/logo1.png")));
+        ImageIcon originalIcon = new ImageIcon(
+                Objects.requireNonNull(
+                        StudentDashboard.class.getResource("/resources/logo1.png")));
         Image scaledImage = originalIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         schoolLogo.setIcon(new ImageIcon(scaledImage));
 //        logo.setIcon();
     }
 
-    //    private void addCourseToList(Course course)
+    private void _getAvailableCoursesFromDatabase(DBConnection connection) throws SQLException {
+        // gets available courses from database and store them in a parameter in class
+        ResultSet result = connection.executeQuery("SELECT courses.course_id,courses.course_name," +
+                "courses.credit_hours," +
+                " lecturer.first_name,lecturer.middle_name,lecturer.last_name from courses left join lecturer on" +
+                " courses.lecturer_id = lecturer.lecturer_id");
+        while (result.next()) {
+            _addCourseToAvailableCourses(
+                    new Course(
+                            result.getString("course_id"),
+                            result.getString("course_name"),
+                            result.getString("credit_hours"),
+                            result.getString("first_name"),
+                            result.getString("middle_name"),
+                            result.getString("last_name")));
+        }
+    }
+
+    private void _addCourseToAvailableCourses(Course course) {
+        availableCourses.add(course);
+    }
+
     private void actionListeners() {
     }
 

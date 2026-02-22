@@ -2,23 +2,45 @@ package com.studentinformationmanagementsystem;
 
 public class Course {
     private final String courseName;
-    private final String courseCode;
+    private final String courseId;
     private final String courseCredit;
     /* TODO: change this to a class lecturer and
         add an event listener to make it a link to get the lecturer details
      */
-    private final String lecturerName;
+    private final String lecturerFirstName;
+    private final String lecturerMiddleName;
+    private final String lecturerLastName;
 
-    public Course(String courseName, String courseCode, String courseCredit, String lecturerName) {
+    public Course(String courseId, String courseName, String courseCredit,
+                  String lecturerFirstName, String lecturerMiddleName, String lecturerLastName) {
+        this.courseId = courseId;
         this.courseName = courseName;
-        this.courseCode = courseCode;
         this.courseCredit = courseCredit;
-        this.lecturerName = lecturerName;
+        this.lecturerFirstName = lecturerFirstName;
+        this.lecturerMiddleName = lecturerMiddleName;
+        this.lecturerLastName = lecturerLastName;
     }
 
     // Getter methods
-    public String getCourseName() {return courseName;}
-    public String getCourseCode() {return courseCode;}
-    public String getCourseCredit() {return courseCredit;}
-    public String getLecturerName() {return lecturerName;}
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public String getCourseCredit() {
+        return courseCredit;
+    }
+
+    public String getLecturerFirstName() {
+        return lecturerFirstName;
+    }
+    public String getLecturerMiddleName(){
+        return lecturerMiddleName;
+    }
+    public String getLecturerLastName() {
+        return lecturerLastName;
+    }
 }
