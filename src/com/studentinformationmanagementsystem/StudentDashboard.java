@@ -22,7 +22,7 @@ public class StudentDashboard extends NDashboard {
     private JPanel contentPanel;
     private JScrollPane coursesScrollPanel;
     private JTable courseTable;
-    private JButton button1;
+    private JButton registerCoursesButton;
 
     /*
      *TODO: create a method that adds a list to coursePanel and maybe make it viewable
