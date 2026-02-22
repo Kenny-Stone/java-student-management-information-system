@@ -1,6 +1,7 @@
 package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,8 @@ public class StudentDashboard extends NDashboard {
     private JPanel coursesPanel;
     private JPanel schoolInfoPanel;
     private JPanel contentPanel;
+    private JScrollPane coursesScrollPanel;
+    private JTable courseTable;
 
     /*
      *TODO: create a method that adds a list to coursePanel and maybe make it viewable
@@ -25,7 +28,7 @@ public class StudentDashboard extends NDashboard {
      * */
     // get school data and store in variable
     private List<Course> availableCourses = new ArrayList<>();
-    private List<Course> studentCourses = new ArrayList<>();
+    private List<Course> enrolledCourses = new ArrayList<>();
     private int noOfStudents;
     private int noOfLecturers;
     private int noOfMales;
@@ -64,6 +67,42 @@ public class StudentDashboard extends NDashboard {
 
     }
 
+    private void _addCoursesToCoursesPanel() {
+        String[] columns = {
+                "Course ID",
+                "Course Name",
+                "Credit Hours",
+                "Lecturer",
+                "Status"
+        };
+
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // make table read-only
+            }
+        };
+
+        JTable courseTable = new JTable(model);
+        courseTable.setRowHeight(28);
+        courseTable.setAutoCreateRowSorter(true); // sorting by column
+
+        availableCourses.forEach(course -> {
+            model.addRow(new Object[]{
+                    course.getCourseId(),
+                    course.getCourseName(),
+                    course.getCourseCredit(),
+                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
+                    "ENROLLED"
+            });
+        });
+    }
+
+    private void _addStudentToEnrolledCourses(Course course) {
+        enrolledCourses.add(course);
+    }
+
+
     private void _setSchoolInfoData() {
 //        schoolInfoPanel.setLayout(new GridLayout(1, 2))
         contentPanel.setLayout(new GridLayout(1, 3, 15, 15));
@@ -79,10 +118,12 @@ public class StudentDashboard extends NDashboard {
     private void _getDataFromDatabase() {
         try {
             DBConnection connection = new DBConnection();
+            //TODO: reduce number of requests by getting count of females, males and students in one request
             noOfStudents = _getNoOfStudentsFromDatabase(connection);
             noOfMales = _getNoOfMalesFromDatabase(connection);
             noOfFemales = _getNoOfFemalesFromDatabase(connection);
             _getAvailableCoursesFromDatabase(connection);   // stores data in availableCourse list
+            _getEnrolledCoursesFromDatabase(connection);
             connection.close();
         } catch (SQLException ex) {
             System.out.println("METHOD: _getDataFromDatabase " + ex.getMessage());
@@ -123,6 +164,32 @@ public class StudentDashboard extends NDashboard {
 //        logo.setIcon();
     }
 
+
+    private void _getEnrolledCoursesFromDatabase(DBConnection connection) throws SQLException {
+        ResultSet result = connection.executeQuery("SELECT" +
+                "courses.course_id,courses.course_name,courses.credit_hours," +
+                "lecturer.lecturer_id,lecturer.first_name,lecturer.middle_name," +
+                "lecturer.last_name " +
+                "FROM enrollments " +
+                "JOIN courses " +
+                "ON enrollments.course_id = courses.course_id " +
+                "JOIN lecturer " +
+                "ON courses.lecturer_id = lecturer.lecturer_id" +
+                "WHERE enrollment.student_id = :student_id");
+
+        while (result.next()) {
+            _addStudentToEnrolledCourses(
+                    new Course(
+                            result.getString("course_id"),
+                            result.getString("course_name"),
+                            result.getString("credit_hours"),
+                            result.getString("first_name"),
+                            result.getString("middle_name"),
+                            result.getString("last_name"))
+            );
+        }
+    }
+
     private void _getAvailableCoursesFromDatabase(DBConnection connection) throws SQLException {
         // gets available courses from database and store them in a parameter in class
         ResultSet result = connection.executeQuery("SELECT courses.course_id,courses.course_name," +
@@ -146,9 +213,5 @@ public class StudentDashboard extends NDashboard {
     }
 
     private void actionListeners() {
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
