@@ -1,6 +1,7 @@
 package com.studentinformationmanagementsystem;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ public class StudentDashboard extends NDashboard {
     private JPanel contentPanel;
     private JScrollPane coursesScrollPanel;
     private JTable courseTable;
+    private JButton registerCoursesButton;
 
     /*
      *TODO: create a method that adds a list to coursePanel and maybe make it viewable
@@ -40,7 +42,7 @@ public class StudentDashboard extends NDashboard {
         _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
         _getDataFromDatabase();
         _setSchoolInfoData();
-
+        _addCoursesToCoursesPanel();
     }
 
     public JPanel getDashboardPanel() {
@@ -81,10 +83,32 @@ public class StudentDashboard extends NDashboard {
             public boolean isCellEditable(int row, int column) {
                 return false; // make table read-only
             }
+
         };
 
-        JTable courseTable = new JTable(model);
-        courseTable.setRowHeight(28);
+
+        courseTable.setDefaultRenderer(Object.class,new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected, boolean hasFocus,
+                    int row,int column
+            ) {
+                Component c = super.getTableCellRendererComponent(
+                        table,value,isSelected,hasFocus,row,column
+                );
+                String status = table.getValueAt(row,4).toString();
+                if(!isSelected) {
+                    if("ENROLLED".equals(status)) {
+                        c.setBackground(new Color(220,255,220));
+                    }else {
+                        c.setBackground(new Color(255,230,230));
+                    }
+                }
+                return c;
+            }
+        });
+//        courseTable.setForeground(Color.DARK_GRAY);
+        courseTable.setRowHeight(30);
         courseTable.setAutoCreateRowSorter(true); // sorting by column
 
         availableCourses.forEach(course -> {
@@ -93,10 +117,25 @@ public class StudentDashboard extends NDashboard {
                     course.getCourseName(),
                     course.getCourseCredit(),
                     course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
-                    "ENROLLED"
+                    "NOT ENROLLED"
             });
         });
+        enrolledCourses.forEach(course -> {
+            model.addRow(new Object[]{
+                    course.getCourseId(),
+                    course.getCourseName(),
+                    course.getCourseCredit(),
+                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
+                    "NOT ENROLLED"
+            });
+
+        });
+
+        courseTable.setModel(model);
     }
+
+
+
 
     private void _addStudentToEnrolledCourses(Course course) {
         enrolledCourses.add(course);
@@ -166,7 +205,7 @@ public class StudentDashboard extends NDashboard {
 
 
     private void _getEnrolledCoursesFromDatabase(DBConnection connection) throws SQLException {
-        ResultSet result = connection.executeQuery("SELECT" +
+        ResultSet result = connection.executeQuery("SELECT " +
                 "courses.course_id,courses.course_name,courses.credit_hours," +
                 "lecturer.lecturer_id,lecturer.first_name,lecturer.middle_name," +
                 "lecturer.last_name " +
@@ -174,8 +213,8 @@ public class StudentDashboard extends NDashboard {
                 "JOIN courses " +
                 "ON enrollments.course_id = courses.course_id " +
                 "JOIN lecturer " +
-                "ON courses.lecturer_id = lecturer.lecturer_id" +
-                "WHERE enrollment.student_id = :student_id");
+                "ON courses.lecturer_id = lecturer.lecturer_id " +
+                "WHERE enrollments.student_id = ?", Main.person.getId());
 
         while (result.next()) {
             _addStudentToEnrolledCourses(
@@ -188,6 +227,7 @@ public class StudentDashboard extends NDashboard {
                             result.getString("last_name"))
             );
         }
+
     }
 
     private void _getAvailableCoursesFromDatabase(DBConnection connection) throws SQLException {
