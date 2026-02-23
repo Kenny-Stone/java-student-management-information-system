@@ -8,9 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public class StudentDashboard extends NDashboard {
     private JPanel studentDashboardPanel;
@@ -37,18 +36,41 @@ public class StudentDashboard extends NDashboard {
     private int noOfLecturers;
     private int noOfMales;
     private int noOfFemales;
-
+    JDialog settingsDialog = new JDialog();
+    // below are buttons that appear in dialog when user clicks on student's name
+    private JButton logOutButton = new JButton("LogOut");
+    private Map<String,JButton> dialogButton = new HashMap<>();
     public StudentDashboard() {
+        _init();
+    }
+
+    private void _init() {
         _setLogo();
         _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
         _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
         _getDataFromDatabase();
         _setSchoolInfoData();
         _addCoursesToCoursesPanel();
+        _setSettingsDialogData();
+        _loadDialogButtons();
+//        _addButtonToDialog(settingsDialog,logOutButton);
         _actionListeners();
+    }
+
+    private void _addToDialogButtons(String name,JButton button) {
+        dialogButton.put(name,button);
 
     }
 
+    private void _loadDialogButtons() {
+        _addToDialogButtons("Sign Up",new JButton("Sign up"));
+        _addToDialogButtons("logout",new JButton("LogOut"));
+
+
+        for(Map.Entry<String,JButton> entry : dialogButton.entrySet()) {
+            _getSettingsPanel().add(entry.getValue());
+        }
+    }
     public JPanel getDashboardPanel() {
         return studentDashboardPanel;
     }
@@ -265,19 +287,24 @@ public class StudentDashboard extends NDashboard {
 
             }
         });
+        dialogButton.get("logout").addActionListener(e -> {
+            System.out.println("Going back to login page");
+            Main.removePanel(this.studentDashboardPanel);
+        });
+    }
+
+    private void _setSettingsDialogData() {
+        settingsDialog.setSize(200,150);
+        settingsDialog.setLayout(new GridLayout(3, 1));
     }
 
     public JDialog _getSettingsPanel() {
-        JDialog settingsDialog = new JDialog();
-        settingsDialog.setSize(200, 150);
-        settingsDialog.setLayout(new GridLayout(3, 1));
-
-        settingsDialog.add(new JButton("Profile"));
-        settingsDialog.add(new JButton("Settings"));
-        settingsDialog.add(new JButton("Logout"));
-
         settingsDialog.pack();
         settingsDialog.setLocationRelativeTo(getDashboardPanel());
         return settingsDialog;
+    }
+
+    private void _addButtonToDialog(JDialog dialog,JButton button) {
+        dialog.add(button);
     }
 }
