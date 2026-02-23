@@ -41,7 +41,6 @@ public class Signup {
         createAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Clicked");
                 try {
                     handleSignup();
                 } catch (RuntimeException ex) {
@@ -156,7 +155,6 @@ public class Signup {
 
 
         errorLabel.setVisible(false);
-        System.out.println("Account Created successfully");
         if (isStudent()) {
             Main.person = new Student(getUserID(), getFirstName(), getMiddleName(),
                     getLastName(), getPhoneNumber(), getEmail(), getPassword(),

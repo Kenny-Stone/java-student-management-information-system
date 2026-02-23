@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,6 +45,8 @@ public class StudentDashboard extends NDashboard {
         _getDataFromDatabase();
         _setSchoolInfoData();
         _addCoursesToCoursesPanel();
+        _actionListeners();
+
     }
 
     public JPanel getDashboardPanel() {
@@ -87,21 +91,21 @@ public class StudentDashboard extends NDashboard {
         };
 
 
-        courseTable.setDefaultRenderer(Object.class,new DefaultTableCellRenderer() {
+        courseTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(
                     JTable table, Object value, boolean isSelected, boolean hasFocus,
-                    int row,int column
+                    int row, int column
             ) {
                 Component c = super.getTableCellRendererComponent(
-                        table,value,isSelected,hasFocus,row,column
+                        table, value, isSelected, hasFocus, row, column
                 );
-                String status = table.getValueAt(row,4).toString();
-                if(!isSelected) {
-                    if("ENROLLED".equals(status)) {
-                        c.setBackground(new Color(220,255,220));
-                    }else {
-                        c.setBackground(new Color(255,230,230));
+                String status = table.getValueAt(row, 4).toString();
+                if (!isSelected) {
+                    if ("ENROLLED".equals(status)) {
+                        c.setBackground(new Color(220, 255, 220));
+                    } else {
+                        c.setBackground(new Color(255, 230, 230));
                     }
                 }
                 return c;
@@ -133,8 +137,6 @@ public class StudentDashboard extends NDashboard {
 
         courseTable.setModel(model);
     }
-
-
 
 
     private void _addStudentToEnrolledCourses(Course course) {
@@ -252,6 +254,30 @@ public class StudentDashboard extends NDashboard {
         availableCourses.add(course);
     }
 
-    private void actionListeners() {
+    private void _actionListeners() {
+        studentDetailsLink.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+//                _showPopUp();
+//                _getSettingsPanel().setVisible(true);
+                _getSettingsPanel().setVisible(!_getSettingsPanel().isVisible());
+                System.out.println("Clicked");
+
+            }
+        });
+    }
+
+    public JDialog _getSettingsPanel() {
+        JDialog settingsDialog = new JDialog();
+        settingsDialog.setSize(200, 150);
+        settingsDialog.setLayout(new GridLayout(3, 1));
+
+        settingsDialog.add(new JButton("Profile"));
+        settingsDialog.add(new JButton("Settings"));
+        settingsDialog.add(new JButton("Logout"));
+
+        settingsDialog.pack();
+        settingsDialog.setLocationRelativeTo(getDashboardPanel());
+        return settingsDialog;
     }
 }
