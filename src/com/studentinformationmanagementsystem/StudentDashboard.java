@@ -39,7 +39,8 @@ public class StudentDashboard extends NDashboard {
     JDialog settingsDialog = new JDialog();
     // below are buttons that appear in dialog when user clicks on student's name
     private JButton logOutButton = new JButton("LogOut");
-    private Map<String,JButton> dialogButton = new HashMap<>();
+    private Map<String, JButton> dialogButton = new HashMap<>();
+
     public StudentDashboard() {
         _init();
     }
@@ -57,20 +58,21 @@ public class StudentDashboard extends NDashboard {
         _actionListeners();
     }
 
-    private void _addToDialogButtons(String name,JButton button) {
-        dialogButton.put(name,button);
+    private void _addToDialogButtons(String name, JButton button) {
+        dialogButton.put(name, button);
 
     }
 
     private void _loadDialogButtons() {
-        _addToDialogButtons("Sign Up",new JButton("Sign up"));
-        _addToDialogButtons("logout",new JButton("LogOut"));
+        _addToDialogButtons("Sign Up", new JButton("Sign up"));
+        _addToDialogButtons("logout", new JButton("LogOut"));
 
 
-        for(Map.Entry<String,JButton> entry : dialogButton.entrySet()) {
+        for (Map.Entry<String, JButton> entry : dialogButton.entrySet()) {
             _getSettingsPanel().add(entry.getValue());
         }
     }
+
     public JPanel getDashboardPanel() {
         return studentDashboardPanel;
     }
@@ -107,7 +109,7 @@ public class StudentDashboard extends NDashboard {
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // make table read-only
+                return true; // make table read-only
             }
 
         };
@@ -137,6 +139,18 @@ public class StudentDashboard extends NDashboard {
         courseTable.setRowHeight(30);
         courseTable.setAutoCreateRowSorter(true); // sorting by column
 
+        enrolledCourses.forEach(course -> {
+            model.addRow(new Object[]{
+                    course.getCourseId(),
+                    course.getCourseName(),
+                    course.getCourseCredit(),
+                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
+                    "ENROLLED"
+            });
+
+        });
+
+
         availableCourses.forEach(course -> {
             model.addRow(new Object[]{
                     course.getCourseId(),
@@ -146,18 +160,13 @@ public class StudentDashboard extends NDashboard {
                     "NOT ENROLLED"
             });
         });
-        enrolledCourses.forEach(course -> {
-            model.addRow(new Object[]{
-                    course.getCourseId(),
-                    course.getCourseName(),
-                    course.getCourseCredit(),
-                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
-                    "NOT ENROLLED"
-            });
 
-        });
+        String[] roles = {"ENROLL", "ENROLLED"};
+        JComboBox<String> comboBox = new JComboBox<>(roles);
+
 
         courseTable.setModel(model);
+        courseTable.getColumn("Status").setCellEditor(new DefaultCellEditor(comboBox));
     }
 
 
@@ -291,10 +300,39 @@ public class StudentDashboard extends NDashboard {
             System.out.println("Going back to login page");
             Main.removePanel(this.studentDashboardPanel);
         });
+
+        registerCoursesButton.addActionListener(e -> {
+            try {
+            _setEnrolledCourses();
+            }
+            catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        });
     }
 
+    private void _setEnrolledCourses()  throws SQLException {
+        DefaultTableModel model = (DefaultTableModel) courseTable.getModel();
+
+        for (int row = 0; row < model.getRowCount(); row++) {
+            String status = model.getValueAt(row, 4).toString();
+
+            if ("ENROLL".equals(status)) {
+
+                String courseId = model.getValueAt(row, 0).toString();
+                String courseName = model.getValueAt(row, 1).toString();
+                String creditHours = model.getValueAt(row,2).toString();
+
+                DBConnection connection = new DBConnection();
+                connection.executeUpdate("INSERT INTO enrollments(semester,academic_year,student_id,course_id) VALUES(" +
+                        "?,?,?,?)",
+                        "1","2026",Main.person.getId(),courseId);
+
+            }
+        }
+    }
     private void _setSettingsDialogData() {
-        settingsDialog.setSize(200,150);
+        settingsDialog.setSize(200, 150);
         settingsDialog.setLayout(new GridLayout(3, 1));
     }
 
@@ -304,7 +342,7 @@ public class StudentDashboard extends NDashboard {
         return settingsDialog;
     }
 
-    private void _addButtonToDialog(JDialog dialog,JButton button) {
+    private void _addButtonToDialog(JDialog dialog, JButton button) {
         dialog.add(button);
     }
 }
