@@ -72,6 +72,7 @@ public class Login {
 
                     }
                 }
+                result.close();
             }
 
         } catch (SQLException ex) {
@@ -115,7 +116,9 @@ public class Login {
     private ResultSet _validateIfUserExists() throws SQLException {
         try {
             DBConnection conn = new DBConnection();
-            ResultSet result = conn.executeQuery("SELECT * from students where student_id = ? and pass_word = ?", _getUserID(), _getPassword());
+            ResultSet result = conn.executeQuery("SELECT * FROM students WHERE student_id = ?" +
+                            " AND pass_word = ?"
+                    , _getUserID(), _getPassword());
             return result;
         } catch (SQLException ex) {
             errorLabel.setText("User doesn't exist!");

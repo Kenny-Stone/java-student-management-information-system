@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
@@ -24,6 +26,7 @@ public class StudentDashboard extends NDashboard {
     private JScrollPane coursesScrollPanel;
     private JTable courseTable;
     private JButton registerCoursesButton;
+    private JLabel errorLabel;
 
     /*
      *TODO: create a method that adds a list to coursePanel and maybe make it viewable
@@ -46,8 +49,10 @@ public class StudentDashboard extends NDashboard {
 
     private void _init() {
         _setLogo();
-        _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
-        _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getMiddleName() + " " + Main.person.getLastName());
+        _setWelcomeText("Welcome, " + Main.person.getFirstName() + " " + Main.person.getMiddleName() + " "
+                + Main.person.getLastName());
+        _setStudentDetailsLink(Main.person.getFirstName() + " " + Main.person.getMiddleName() + " "
+                + Main.person.getLastName());
         _getDataFromDatabase();
         _setSchoolInfoData();
         _addCoursesToCoursesPanel();
@@ -134,8 +139,6 @@ public class StudentDashboard extends NDashboard {
             }
         });
 
-        /*TODO: change to button instead of combo box*/
-//        courseTable.setForeground(Color.DARK_GRAY);
         courseTable.setRowHeight(30);
         courseTable.setAutoCreateRowSorter(true); // sorting by column
 
@@ -144,7 +147,8 @@ public class StudentDashboard extends NDashboard {
                     course.getCourseId(),
                     course.getCourseName(),
                     course.getCourseCredit(),
-                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
+                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " "
+                            + course.getLecturerLastName(),
                     "ENROLLED"
             });
 
@@ -156,16 +160,15 @@ public class StudentDashboard extends NDashboard {
                     course.getCourseId(),
                     course.getCourseName(),
                     course.getCourseCredit(),
-                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
+                    course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " "
+                            + course.getLecturerLastName(),
                     "ENROLL"
             });
         });
 
-        String[] roles = {"ENROLLED", "ENROLL"};
-        JComboBox<String> comboBox = new JComboBox<>(roles);
-
         courseTable.setModel(model);
-        courseTable.getColumn("Status").setCellEditor(new DefaultCellEditor(comboBox));
+        courseTable.getColumn("Status").setCellRenderer(new ButtonRenderer());
+        courseTable.getColumn("Status").setCellEditor(new ButtonEditor(model));
     }
 
 
@@ -288,8 +291,6 @@ public class StudentDashboard extends NDashboard {
         studentDetailsLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                _showPopUp();
-//                _getSettingsPanel().setVisible(true);
                 _getSettingsPanel().setVisible(!_getSettingsPanel().isVisible());
                 System.out.println("Clicked");
 
@@ -302,34 +303,56 @@ public class StudentDashboard extends NDashboard {
 
         registerCoursesButton.addActionListener(e -> {
             try {
-            _setEnrolledCourses();
-            }
-            catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                _setEnrolledCourses();
+                errorLabel.setForeground(Color.GREEN);
+                errorLabel.setText("Courses registered successfully");
+            } catch (SQLException ex) {
+                errorLabel.setForeground(Color.RED);
+                errorLabel.setText("Error occurred while registering courses");
             }
         });
     }
 
-    private void _setEnrolledCourses()  throws SQLException {
+    private void _setEnrolledCourses() throws SQLException {
         DefaultTableModel model = (DefaultTableModel) courseTable.getModel();
 
         for (int row = 0; row < model.getRowCount(); row++) {
             String status = model.getValueAt(row, 4).toString();
 
-            if ("ENROLL".equals(status)) {
+            if ("ENROLLED".equals(status)) {
 
                 String courseId = model.getValueAt(row, 0).toString();
-                String courseName = model.getValueAt(row, 1).toString();
-                String creditHours = model.getValueAt(row,2).toString();
+//                String courseName = model.getValueAt(row, 1).toString();
+//                String creditHours = model.getValueAt(row, 2).toString();
 
-                DBConnection connection = new DBConnection();
-                connection.executeUpdate("INSERT INTO enrollments(semester,academic_year,student_id,course_id) VALUES(" +
-                        "?,?,?,?)",
-                        "1","2026",Main.person.getId(),courseId);
+                // student isn't registered
+                if (!_isStudentAlreadyRegisteredInCourse(courseId)) {
 
+                    DBConnection connection = new DBConnection();
+                    connection.executeUpdate(
+                            "INSERT INTO enrollments(semester,academic_year,student_id,course_id) VALUES(" +
+                                    "?,?,?,?)",
+                            "1", "2026", Main.person.getId(), courseId);
+
+                    connection.close();
+                }
             }
         }
     }
+
+
+    private boolean _isStudentAlreadyRegisteredInCourse(String courseId) throws SQLException {
+        boolean exists;
+        //TODO:make a sql request to get data if true do not save
+        DBConnection connection = new DBConnection();
+        ResultSet result = connection.executeQuery("SELECT 1 FROM enrollments WHERE student_id = ? " +
+                "AND course_id = ?", Main.person.getId(), courseId);
+        exists = result.next();
+        result.close();
+        connection.close();
+        return exists;
+    }
+
     private void _setSettingsDialogData() {
         settingsDialog.setSize(200, 150);
         settingsDialog.setLayout(new GridLayout(3, 1));
@@ -341,7 +364,65 @@ public class StudentDashboard extends NDashboard {
         return settingsDialog;
     }
 
-    private void _addButtonToDialog(JDialog dialog, JButton button) {
-        dialog.add(button);
+
+    // Custom cell editor for button in Status column
+    private class ButtonEditor extends DefaultCellEditor {
+        private JButton button;
+        private DefaultTableModel model;
+        private int row;
+
+        public ButtonEditor(DefaultTableModel model) {
+            super(new JCheckBox());
+            this.model = model;
+            button = new JButton();
+            button.addActionListener(e -> {
+                String status = (String) model.getValueAt(row, 4);
+                if ("ENROLL".equals(status)) {
+                    model.setValueAt("ENROLLED", row, 4);
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                                                     boolean isSelected, int row, int col) {
+            this.row = row;
+            String status = (String) value;
+            button.setText(status);
+            button.setEnabled("ENROLL".equals(status));
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return model.getValueAt(row, 4);
+        }
+    }
+
+    // Custom cell renderer for button in Status column
+    private static class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus,
+                                                       int row, int column) {
+            String status = (String) value;
+            setText(status);
+            setEnabled("ENROLL".equals(status));
+
+            if ("ENROLLED".equals(status)) {
+                setBackground(new Color(76, 175, 80));
+                setForeground(Color.WHITE);
+            } else {
+                setBackground(new Color(33, 150, 243));
+                setForeground(Color.WHITE);
+            }
+
+            return this;
+        }
     }
 }
