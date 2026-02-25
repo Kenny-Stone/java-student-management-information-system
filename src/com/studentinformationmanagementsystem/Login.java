@@ -33,7 +33,7 @@ public class Login {
                 try {
                     handleLogin();
                 } catch (RuntimeException ex) {
-                    System.out.println(ex.getMessage());
+                    errorLabel.setText("Error while connection. Please make sure details are correct!");
                 }
             }
         });
@@ -131,3 +131,4 @@ public class Login {
         return count;
     }
 }
+

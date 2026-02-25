@@ -38,7 +38,6 @@ public class StudentDashboard extends NDashboard {
     private int noOfFemales;
     JDialog settingsDialog = new JDialog();
     // below are buttons that appear in dialog when user clicks on student's name
-    private JButton logOutButton = new JButton("LogOut");
     private Map<String, JButton> dialogButton = new HashMap<>();
 
     public StudentDashboard() {
@@ -64,8 +63,7 @@ public class StudentDashboard extends NDashboard {
     }
 
     private void _loadDialogButtons() {
-        _addToDialogButtons("Sign Up", new JButton("Sign up"));
-        _addToDialogButtons("logout", new JButton("LogOut"));
+        _addToDialogButtons("logout", new JButton("Log Out"));
 
 
         for (Map.Entry<String, JButton> entry : dialogButton.entrySet()) {
@@ -135,6 +133,8 @@ public class StudentDashboard extends NDashboard {
                 return c;
             }
         });
+
+        /*TODO: change to button instead of combo box*/
 //        courseTable.setForeground(Color.DARK_GRAY);
         courseTable.setRowHeight(30);
         courseTable.setAutoCreateRowSorter(true); // sorting by column
@@ -157,13 +157,12 @@ public class StudentDashboard extends NDashboard {
                     course.getCourseName(),
                     course.getCourseCredit(),
                     course.getLecturerFirstName() + " " + course.getLecturerMiddleName() + " " + course.getLecturerLastName(),
-                    "NOT ENROLLED"
+                    "ENROLL"
             });
         });
 
-        String[] roles = {"ENROLL", "ENROLLED"};
+        String[] roles = {"ENROLLED", "ENROLL"};
         JComboBox<String> comboBox = new JComboBox<>(roles);
-
 
         courseTable.setModel(model);
         courseTable.getColumn("Status").setCellEditor(new DefaultCellEditor(comboBox));
