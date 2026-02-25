@@ -365,6 +365,13 @@ public class StudentDashboard extends NDashboard {
     }
 
 
+
+
+
+
+
+
+
     // Custom cell editor for button in Status column
     private class ButtonEditor extends DefaultCellEditor {
         private JButton button;
@@ -421,7 +428,6 @@ public class StudentDashboard extends NDashboard {
                 setBackground(new Color(33, 150, 243));
                 setForeground(Color.WHITE);
             }
-
             return this;
         }
     }

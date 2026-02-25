@@ -3,6 +3,8 @@ package com.studentinformationmanagementsystem;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,15 +19,17 @@ public class Login {
     private JButton signInInsteadButton;
     private JLabel schoolLogo;
     private JLabel errorLabel;
+    private JLabel signInInsteadLabel;
 
 
     public Login() {
-        getSignInInsteadButton().addActionListener(new ActionListener() {
+        getSignInInsteadLabel().addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e){
                 Main.show("Signup");
             }
         });
+
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -84,10 +88,10 @@ public class Login {
 
     }
 
-    public JButton getSignInInsteadButton() {
-        return signInInsteadButton;
+    public JLabel getSignInInsteadLabel() {
+        return signInInsteadLabel;
     }
-
+    
     public JPanel getLoginPanel() {
         return loginPanel;
     }

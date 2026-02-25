@@ -3,8 +3,7 @@ package com.studentinformationmanagementsystem;
 import com.sun.jdi.InvalidTypeException;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 
 public class Signup {
@@ -23,19 +22,20 @@ public class Signup {
     private JButton createAccountButton;
     private JLabel title;
     private JPanel signupPanel;
-    private JButton loginInstead;
     private JLabel errorLabel;
     private JLabel schoolLogo;
+    private JLabel loginInsteadLabel;
 
     public Signup() {
         errorLabel.setVisible(false);
 
         //action listeners
-        getLoginInstead().addActionListener(new ActionListener() {
+        getLoginInsteadLabel().addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 Main.show("Login");
             }
+
         });
 
         createAccountButton.addActionListener(new ActionListener() {
@@ -50,8 +50,8 @@ public class Signup {
         });
     }
 
-    public JButton getLoginInstead() {
-        return loginInstead;
+    public JLabel getLoginInsteadLabel() {
+        return loginInsteadLabel;
     }
 
     public JPanel getSignupPanel() {
