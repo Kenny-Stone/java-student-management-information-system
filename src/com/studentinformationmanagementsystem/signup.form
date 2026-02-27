@@ -28,10 +28,10 @@
       </vspacer>
       <component id="f5b35" class="javax.swing.JLabel">
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Student/Lecturer ID:"/>
+          <text value="Student ID:"/>
         </properties>
       </component>
       <component id="8ca35" class="javax.swing.JLabel">
@@ -200,6 +200,7 @@
         </constraints>
         <properties>
           <text value="Lecturer"/>
+          <visible value="false"/>
         </properties>
       </component>
       <component id="f1a7e" class="javax.swing.JButton" binding="createAccountButton" default-binding="true">
