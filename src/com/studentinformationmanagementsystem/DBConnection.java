@@ -9,7 +9,7 @@ public class DBConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/sims", "root", "administrator"
+                    "jdbc:mysql://localhost:3306/sims", "root", ""
             );
 
         } catch (ClassNotFoundException | SQLException e) {
